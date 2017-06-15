@@ -6,6 +6,23 @@
     <AssemblyName>Mono.Cecil</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\CustomDebugInfoConstants.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\CustomDebugInfoEncoder.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\CustomDebugInfoKind.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\CustomDebugInfoReader.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\CustomDebugInfoRecord.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\DynamicLocalInfo.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\ImportTargetKind.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\PortableCustomDebugInfoKinds.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\StateMachineHoistedLocalScope.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\TupleElementNamesInfo.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.Debugging\VBImportScopeKind.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.PooledObjects\ArrayBuilder.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.PooledObjects\ArrayBuilder.Enumerator.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.PooledObjects\ObjectPool`1.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.PooledObjects\PooledDictionary.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.PooledObjects\PooledHashSet.cs" />
+    <Compile Include="Microsoft.CodeAnalysis.PooledObjects\PooledStringBuilder.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="Mono\*.cs" />
     <Compile Include="Mono.Cecil\*.cs" />
@@ -14,6 +31,36 @@
     <Compile Include="Mono.Cecil.PE\*.cs" />
     <Compile Include="Mono.Collections.Generic\*.cs" />
     <Compile Include="Mono.Security.Cryptography\*.cs" />
+    <Compile Include="System.Collections.Immutable\ImmutableArray.cs" />
+    <Compile Include="System.Collections.Immutable\ImmutableDictionary.cs" />
+    <Compile Include="System.Reflection.Metadata\BitArithmetic.cs" />
+    <Compile Include="System.Reflection.Metadata\Blob.cs" />
+    <Compile Include="System.Reflection.Metadata\BlobUtilities.cs" />
+    <Compile Include="System.Collections.Immutable\IImmutableArray.cs" />
+    <Compile Include="System.Collections.Immutable\ImmutableArray_1.Builder.cs" />
+    <Compile Include="System.Collections.Immutable\ImmutableArray_1.Enumerator.cs" />
+    <Compile Include="System.Collections.Immutable\ImmutableArray_1.Minimal.cs" />
+    <Compile Include="System.Collections.Immutable\ImmutableExtensions.Minimal.cs" />
+    <Compile Include="System.Collections.Immutable\PureAttribute.cs" />
+    <Compile Include="System.Collections.Immutable\Requires.cs" />
+    <Compile Include="System.Reflection.Metadata\BlobBuilder.cs" />
+    <Compile Include="System.Reflection.Metadata\BlobBuilder.Enumerators.cs" />
+    <Compile Include="System.Reflection.Metadata\BlobWriter.cs" />
+    <Compile Include="System.Reflection.Metadata\BlobWriterImpl.cs" />
+    <Compile Include="System.Reflection.Metadata\ByteSequenceComparer.cs" />
+    <Compile Include="System.Reflection.Metadata\Hash.cs" />
+    <Compile Include="System.Reflection.Metadata\ImmutableByteArrayInterop.cs" />
+    <Compile Include="System.Reflection.Metadata\MetadataTokens.cs" />
+    <Compile Include="System.Reflection.Metadata\MethodDefinitionHandle.cs" />
+    <Compile Include="System.Reflection.Metadata\StreamExtensions.cs" />
+    <Compile Include="System.Reflection.Metadata\Throw.cs" />
+    <Compile Include="System.ValueTuple\TupleElementNamesAttribute.cs" />
+    <Compile Include="System.ValueTuple\ValueTuple.cs" />
+    <Compile Include="System\HashHelpers.cs" />
+    <Compile Include="System\IReadOnlyCollection.cs" />
+    <Compile Include="System\IReadOnlyList.cs" />
+    <Compile Include="System\IStructuralComparable.cs" />
+    <Compile Include="System\IStructuralEquatable.cs" />
   </ItemGroup>
   <Import Project="Mono.Cecil.props" />
   <Import Project="$(MSBuildCSharpTargets)" Condition=" ! $(NetStandard) " />
