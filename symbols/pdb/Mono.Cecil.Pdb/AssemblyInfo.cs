@@ -10,7 +10,10 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle ("Mono.Cecil.Pdb")]
 
 [assembly: CLSCompliant (false)]
+
+[assembly: InternalsVisibleTo ("Mono.Cecil.WindowsPdb, PublicKey=" + Consts.PublicKey)]
