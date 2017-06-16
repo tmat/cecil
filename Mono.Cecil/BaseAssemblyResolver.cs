@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -65,10 +66,10 @@ namespace Mono.Cecil {
 #endif
 	}
 
-#if !NET_CORE
 	public abstract class BaseAssemblyResolver : IAssemblyResolver {
 
-		static readonly bool on_mono = Type.GetType ("Mono.Runtime") != null;
+		static readonly bool on_mono = TryGetType ("Mono.Runtime") != null;
+		static readonly bool on_core_clr = TryGetType("System.Runtime.Loader.AssemblyLoadContext, System.Runtime.Loader, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a") != null;
 
 		readonly Collection<string> directories;
 
@@ -82,6 +83,17 @@ namespace Mono.Cecil {
 		public void RemoveSearchDirectory (string directory)
 		{
 			directories.Remove (directory);
+		}
+
+		private static Type TryGetType (string assemblyQualifiedName)
+		{
+			try {
+				// Note that throwOnError=false only suppresses some exceptions, not all.
+				return Type.GetType (assemblyQualifiedName, throwOnError: false);
+			}
+			catch {
+				return null;
+			}
 		}
 
 		public string [] GetSearchDirectories ()
@@ -127,30 +139,32 @@ namespace Mono.Cecil {
 				};
 			}
 
-			var framework_dir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
-			var framework_dirs = on_mono
-				? new [] { framework_dir, Path.Combine (framework_dir, "Facades") }
-				: new [] { framework_dir };
+			if (!on_core_clr) {
+				var framework_dir = Path.GetDirectoryName (typeof (object).GetTypeInfo ().Module.FullyQualifiedName);
+				var framework_dirs = on_mono
+					? new [] { framework_dir, Path.Combine (framework_dir, "Facades") }
+					: new [] { framework_dir };
 
-			if (IsZero (name.Version)) {
+				if (IsZero (name.Version)) {
+					assembly = SearchDirectory (name, framework_dirs, parameters);
+					if (assembly != null)
+						return assembly;
+				}
+
+				if (name.Name == "mscorlib") {
+					assembly = GetCorlib (name, parameters);
+					if (assembly != null)
+						return assembly;
+				}
+
+				assembly = GetAssemblyInGac (name, parameters);
+				if (assembly != null)
+					return assembly;
+
 				assembly = SearchDirectory (name, framework_dirs, parameters);
 				if (assembly != null)
 					return assembly;
 			}
-
-			if (name.Name == "mscorlib") {
-				assembly = GetCorlib (name, parameters);
-				if (assembly != null)
-					return assembly;
-			}
-
-			assembly = GetAssemblyInGac (name, parameters);
-			if (assembly != null)
-				return assembly;
-
-			assembly = SearchDirectory (name, framework_dirs, parameters);
-			if (assembly != null)
-				return assembly;
 
 			if (ResolveFailure != null) {
 				assembly = ResolveFailure (this, name);
@@ -187,15 +201,17 @@ namespace Mono.Cecil {
 
 		AssemblyDefinition GetCorlib (AssemblyNameReference reference, ReaderParameters parameters)
 		{
+			Debug.Assert (!on_core_clr);
+
 			var version = reference.Version;
-			var corlib = typeof (object).Assembly.GetName ();
+			var corlib = typeof (object).GetTypeInfo ().Assembly.GetName ();
 
 			if (corlib.Version == version || IsZero (version))
-				return GetAssembly (typeof (object).Module.FullyQualifiedName, parameters);
+				return GetAssembly (typeof (object).GetTypeInfo ().Module.FullyQualifiedName, parameters);
 
 			var path = Directory.GetParent (
 				Directory.GetParent (
-					typeof (object).Module.FullyQualifiedName).FullName
+					typeof (object).GetTypeInfo ().Module.FullyQualifiedName).FullName
 				).FullName;
 
 			if (on_mono) {
@@ -279,7 +295,7 @@ namespace Mono.Cecil {
 		{
 			return Path.Combine (
 				Directory.GetParent (
-					Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName)).FullName,
+					Path.GetDirectoryName (typeof (object).GetTypeInfo ().Module.FullyQualifiedName)).FullName,
 				"gac");
 		}
 
@@ -352,5 +368,4 @@ namespace Mono.Cecil {
 		{
 		}
 	}
-#endif
 }

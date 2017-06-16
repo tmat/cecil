@@ -1,3 +1,4 @@
+#if !NET_CORE
 using System.Security.Permissions;
 
 using NUnit.Framework;
@@ -65,3 +66,4 @@ namespace Mono.Cecil.Tests {
 		}
 	}
 }
+#endif
