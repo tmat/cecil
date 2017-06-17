@@ -31,6 +31,8 @@
     <PackageReference Include="System.Collections.Immutable" Version="1.3.1" />
     <PackageReference Include="System.Reflection.Metadata" Version="1.4.2" />
     <PackageReference Include="System.ValueTuple" Version="4.3.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PooledObjects" Version="2.6.0-beta1-61817-01" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Debugging" Version="2.6.0-beta1-61817-01" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mono.Cecil.Pdb\AssemblyInfo.cs" />
@@ -38,5 +40,12 @@
     <Compile Include="Mono.Cecil.Pdb\NativePdbWriter.cs" />
     <Compile Include="Mono.Cecil.Pdb\PdbHelper.cs" />
     <Compile Include="Mono.Cecil.Pdb\ProjectInfo.cs" />
+  </ItemGroup>
+  
+  <!-- Workaround for https://github.com/NuGet/Home/issues/4856 -->
+  <ItemGroup>
+    <Compile Update="@(Compile)">
+      <Link Condition="'%(NuGetPackageId)' != ''">%(NuGetPackageId)\%(Link)</Link>
+    </Compile>
   </ItemGroup>
 </Project>
